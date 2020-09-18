@@ -1,3 +1,6 @@
+import fitness
+
+
 def readfile(filename):
     file = open('problems/' + filename, "r")
     lines = file.readlines()
@@ -10,9 +13,10 @@ def readfile(filename):
     coordinates = []
     for j in range(i, len(lines) - 1):
         line = lines[j]
-        coord = tuple(line.strip().split())
+        coord = [float(item) for item in line.strip().split()]
         coordinates.append(coord)
     return coordinates
 
 
-print(readfile('a280.tsp'))
+# coordinates = readfile('a280.tsp')
+# print(fitness.fitness(coordinates))

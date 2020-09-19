@@ -11,7 +11,7 @@ def randomSolver(coordinates):
         bestDistance = float(bestStr)
 
     bestAnswer = None
-    fitnessEvalutations = 300000
+    fitnessEvalutations = 3000000
     while fitnessEvalutations:
         print('fitnessEvaluationsCnt:', fitnessEvalutations)
         fitnessEvalutations -= 1

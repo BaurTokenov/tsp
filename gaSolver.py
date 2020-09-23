@@ -78,4 +78,4 @@ def ga(populationSize, generations, coordinates):
 
 
 def gaSolver(coordinates):
-    ga(5000, 500, coordinates)
+    ga(500, 5000, coordinates)

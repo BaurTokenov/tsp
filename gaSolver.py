@@ -1,5 +1,5 @@
 import random
-from fitness import fitness
+from fitness import fitness, calcDistance
 
 
 def randomSolution(coordinates):
@@ -7,8 +7,8 @@ def randomSolution(coordinates):
     return curList
 
 
-def selection(populationSize, k):
-    tournament_pool = random.sample(populationSize, k)
+def selection(miniPopulation, k):
+    tournament_pool = random.sample(miniPopulation, k)
     result = sorted(tournament_pool, key=lambda x: x[0])
     return result[0]
 
@@ -29,14 +29,10 @@ def crossover(p1, p2):
 
 
 def mutate(solution, rate):
-    for i in range(0, len(solution[1]), 25):
-        if random.random() < rate:
-            if i + 1 < len(solution[1]) and i + 2 < len(solution[1]):
-                solution[1][i+1], solution[1][i] = solution[1][i], solution[1][i+1]
-                # savedVal = solution[1][i+1]
-                # solution[1][i+1] = solution[1][i+2]
-                # solution[1][i+2] = solution[1][i]
-                # solution[1][i] = savedVal
+    if random.random() < rate:
+        pos1 = random.randint(1, len(solution[1]) - 1)
+        pos2 = random.randint(1, len(solution[1]) - 1)
+        solution[1][pos1], solution[1][pos2] = solution[1][pos2], solution[1][pos1]
 
     return solution
 
@@ -56,12 +52,12 @@ def ga(populationSize, generations, coordinates):
             parent1 = selection(population, 10)
             parent2 = selection(population, 10)
             offspring1 = crossover(parent1, parent2)
-            offspring1 = mutate(offspring1, 0.08)
+            offspring1 = mutate(offspring1, 0.1)
             offspring1 = (fitness(offspring1[1]), offspring1[1])
             children.append(offspring1)
 
             offspring2 = crossover(parent2, parent1)
-            offspring2 = mutate(offspring2, 0.08)
+            offspring2 = mutate(offspring2, 0.1)
             offspring2 = (fitness(offspring2[1]), offspring2[1])
             children.append(offspring2)
 
@@ -69,9 +65,16 @@ def ga(populationSize, generations, coordinates):
         pool.extend(children)
         pool = sorted(pool, key=lambda x: x[0])
         population = pool[:populationSize]
+        # population = children
+        # population = sorted(population, key=lambda x: x[0])
+        # for solution in population:
+        #     if solution[0] < best[0]:
+        #         best = solution
         if pool[0][0] < best[0]:
             best = pool[0]
-        print("Best in generation:", g, best[0], pool[0][0])
+
+        print("Best in generation:", g, best[0], population[0][0])
+    print('Final Generation:', best[0])
 
 
 def gaSolver(coordinates):

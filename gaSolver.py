@@ -37,6 +37,24 @@ def mutate(solution, rate):
     return solution
 
 
+def replacement(population, children, replacementType):
+    # sort the parents + children and keep the best
+    if replacementType == 1:
+        pool = population + children
+        pool = sorted(pool, key=lambda x: x[0])
+        return pool[:len(population)]
+    # children fully replace parents
+    if replacementType == 2:
+        return children
+    # replace worst parents with better children
+    if replacementType == 3:
+        keepers = len(population) // 2
+        parents = sorted(population, key=lambda x: x[0])[:keepers]
+        children = sorted(children, key=lambda x: x[0], reverse=True)[keepers:]
+        population = parents + children
+        return population
+
+
 def ga(populationSize, generations, coordinates):
     population = []
     for i in range(populationSize):
@@ -61,17 +79,12 @@ def ga(populationSize, generations, coordinates):
             offspring2 = (fitness(offspring2[1]), offspring2[1])
             children.append(offspring2)
 
-        pool = population
-        pool.extend(children)
-        pool = sorted(pool, key=lambda x: x[0])
-        population = pool[:populationSize]
         # population = children
         # population = sorted(population, key=lambda x: x[0])
-        # for solution in population:
-        #     if solution[0] < best[0]:
-        #         best = solution
-        if pool[0][0] < best[0]:
-            best = pool[0]
+        population = replacement(population, children, 1)
+        for solution in population:
+            if solution[0] < best[0]:
+                best = solution
 
         print("Best in generation:", g, best[0], population[0][0])
     print('Final Generation:', best[0])

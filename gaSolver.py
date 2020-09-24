@@ -63,7 +63,7 @@ def ga(populationSize, generations, coordinates):
         population.append((fit, randSol))
 
     curGen = 0
-    best = (9999999, [])
+    best = (99999999999, [])
     for g in range(generations):
         children = []
         while len(children) < populationSize:

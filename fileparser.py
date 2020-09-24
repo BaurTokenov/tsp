@@ -13,6 +13,8 @@ def readfile(filename):
     coordinates = []
     for j in range(i, len(lines) - 1):
         line = lines[j]
+        if "EOF" in line or not line:
+            continue
         coord = [float(item) for item in line.strip().split()]
         coordinates.append(coord)
     return coordinates

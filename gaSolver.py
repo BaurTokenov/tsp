@@ -70,18 +70,18 @@ def ga(populationSize, generations, coordinates):
             parent1 = selection(population, 10)
             parent2 = selection(population, 10)
             offspring1 = crossover(parent1, parent2)
-            offspring1 = mutate(offspring1, 0.3)
+            offspring1 = mutate(offspring1, 0.5)
             offspring1 = (fitness(offspring1[1]), offspring1[1])
             children.append(offspring1)
 
             offspring2 = crossover(parent2, parent1)
-            offspring2 = mutate(offspring2, 0.3)
+            offspring2 = mutate(offspring2, 0.5)
             offspring2 = (fitness(offspring2[1]), offspring2[1])
             children.append(offspring2)
 
         # population = children
         # population = sorted(population, key=lambda x: x[0])
-        population = replacement(population, children, 3)
+        population = replacement(population, children, 1)
         for solution in population:
             if solution[0] < best[0]:
                 best = solution

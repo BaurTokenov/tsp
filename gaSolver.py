@@ -61,14 +61,15 @@ def ga(populationSize, generations, coordinates):
         randSol = randomSolution(coordinates)
         fit = fitness(randSol)
         population.append((fit, randSol))
-
+    citiesCnt = len(coordinates)
     curGen = 0
     best = (99999999999, [])
     for g in range(generations):
         children = []
         while len(children) < populationSize:
-            parent1 = selection(population, 10)
-            parent2 = selection(population, 10)
+            tournamentPoolSize = 10
+            parent1 = selection(population, tournamentPoolSize)
+            parent2 = selection(population, tournamentPoolSize)
             offspring1 = crossover(parent1, parent2)
             offspring1 = mutate(offspring1, 0.5)
             offspring1 = (fitness(offspring1[1]), offspring1[1])
@@ -87,7 +88,7 @@ def ga(populationSize, generations, coordinates):
                 best = solution
 
         print("Best in generation:", g, best[0], population[0][0])
-    print('Final Generation:', best[0])
+    print('Final Generation:', best[0], [int(x[0]) for x in best[1]])
 
 
 def gaSolver(coordinates):

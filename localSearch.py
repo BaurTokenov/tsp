@@ -34,17 +34,19 @@ def ls(coordinates):
     climb = True
     timer = 1
     temperature = cooling(timer)
-    while timer < 1000000:
+    while curSolution[0] > 4000:
         neighbors = []
-        climb = False
-        timer += 1
-        for i in range(100):
+        timer += 1000
+        for i in range(200):
             newSolution = getNeighborSolution(curSolution)
+            flag = False
             if shouldAccept(newSolution, curSolution,
                             temperature) > random.random():
-                climb = True
                 curSolution = newSolution
+                flag = True
             temperature = cooling(timer)
+            if flag:
+                break
         print("CurSolution:", curSolution[0])
 
     return curSolution

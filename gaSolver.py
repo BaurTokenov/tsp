@@ -1,6 +1,8 @@
 import random
 from fitness import fitness, calcDistance
 
+fitnessEvaluations = 0
+
 
 def randomSolution(coordinates):
     curList = random.sample(coordinates, len(coordinates))
@@ -57,12 +59,18 @@ def replacement(population, children, replacementType):
 
 def ga(populationSize, generations, coordinates):
     population = []
+    global fitnessEvaluations
+
+    # initialize population
     for i in range(populationSize):
         randSol = randomSolution(coordinates)
         fit = fitness(randSol)
+        fitnessEvaluations -= 1
         population.append((fit, randSol))
+
     best = (99999999999, [])
     mutationRate = 0.5
+
     for g in range(generations):
         children = []
         while len(children) < populationSize:
@@ -74,24 +82,25 @@ def ga(populationSize, generations, coordinates):
             offspring1 = mutate(offspring1, mutationRate)
             offspring1 = (fitness(offspring1[1]), offspring1[1])
             children.append(offspring1)
+            fitnessEvaluations -= 1
 
             offspring2 = crossover(parent2, parent1)
             offspring2 = mutate(offspring2, mutationRate)
             offspring2 = (fitness(offspring2[1]), offspring2[1])
             children.append(offspring2)
-            # mutationRate = (generations - g)/generations
+            fitnessEvaluations -= 1
 
-        # population = children
-        # population = sorted(population, key=lambda x: x[0])
         population = replacement(population, children, 3)
         for solution in population:
             if solution[0] < best[0]:
                 best = solution
-
-        print("Best in generation:", g, best[0], population[0][0])
-    print('Final Generation:', best[0], [int(x[0]) for x in best[1]])
+        if fitnessEvaluations <= 0:
+            return best
+        print("Best in generation", g, ':', best[0])
     return best
 
 
-def gaSolver(coordinates):
-    return ga(1000, 2000, coordinates)
+def gaSolver(coordinates, populationSize, fitnessEvaluationsArg):
+    global fitnessEvaluations
+    fitnessEvaluations = fitnessEvaluationsArg
+    return ga(populationSize, 20000, coordinates)

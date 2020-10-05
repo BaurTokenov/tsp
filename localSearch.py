@@ -3,6 +3,8 @@ import copy
 import math
 from fitness import fitness, calcDistance
 
+fitnessEvaluations = 0
+
 
 def randomSolution(coordinates):
     curList = random.sample(coordinates, len(coordinates))
@@ -10,10 +12,12 @@ def randomSolution(coordinates):
 
 
 def getNeighborSolution(solution):
+    global fitnessEvaluations
     pos1 = random.randint(1, len(solution[1]) - 1)
     pos2 = random.randint(1, len(solution[1]) - 1)
     newSolution = copy.deepcopy(solution[1])
     newSolution[pos1], newSolution[pos2] = newSolution[pos2], newSolution[pos1]
+    fitnessEvaluations -= 1
     return (fitness(newSolution), newSolution)
 
 
@@ -24,22 +28,28 @@ def shouldAccept(newSolution, curSolution, temperature):
 
 
 def cooling(timer):
-    return 105 / math.log(timer + 123)
+    return 105 / math.log(100*timer + 123)
 
 
 def ls(coordinates):
+    global fitnessEvaluations
     curSolution = randomSolution(coordinates)
     fit = fitness(curSolution)
+    fitnessEvaluations -= 1
     curSolution = (fit, curSolution)
-    climb = True
     timer = 1
     temperature = cooling(timer)
-    while curSolution[0] > 4000:
+
+    while fitnessEvaluations >= 0:
         neighbors = []
-        timer += 1000
+        timer += 10000
+
         for i in range(200):
             newSolution = getNeighborSolution(curSolution)
+            # flag is necessary for the first ascent approach
             flag = False
+            if (fitnessEvaluations <= 0):
+                return curSolution
             if shouldAccept(newSolution, curSolution,
                             temperature) > random.random():
                 curSolution = newSolution
@@ -47,10 +57,12 @@ def ls(coordinates):
             temperature = cooling(timer)
             if flag:
                 break
-        print("CurSolution:", curSolution[0])
+        print("Current solution:", curSolution[0])
 
     return curSolution
 
 
-def localSearch(coordinates):
+def localSearch(coordinates, fitnessEvaluationsArg):
+    global fitnessEvaluations
+    fitnessEvaluations = fitnessEvaluationsArg
     return ls(coordinates)

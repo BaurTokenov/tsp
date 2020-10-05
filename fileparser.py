@@ -18,7 +18,3 @@ def readfile(filename):
         coord = [float(item) for item in line.strip().split()]
         coordinates.append(coord)
     return coordinates
-
-
-# coordinates = readfile('a280.tsp')
-# print(fitness.fitness(coordinates))

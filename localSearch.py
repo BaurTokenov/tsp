@@ -24,7 +24,7 @@ def shouldAccept(newSolution, curSolution, temperature):
 
 
 def cooling(timer):
-    return 1005 / math.log(timer + 123)
+    return 105 / math.log(timer + 123)
 
 
 def ls(coordinates):
@@ -34,17 +34,16 @@ def ls(coordinates):
     climb = True
     timer = 1
     temperature = cooling(timer)
-    while climb:
+    while timer < 1000000:
         neighbors = []
         climb = False
         timer += 1
         for i in range(100):
             newSolution = getNeighborSolution(curSolution)
-            if newSolution[0] < curSolution[0]:
+            if shouldAccept(newSolution, curSolution,
+                            temperature) > random.random():
                 climb = True
                 curSolution = newSolution
-            print(shouldAccept(newSolution, curSolution,
-                               temperature) > random.random())
             temperature = cooling(timer)
         print("CurSolution:", curSolution[0])
 
